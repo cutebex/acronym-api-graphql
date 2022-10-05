@@ -1,0 +1,116 @@
+tags:
+- name: Acronym
+  description: acronym API
+
+paths:
+
+# [GET] users/id
+  /acronym?from=50&limit=10:
+    get:
+      tags:
+      - acronyms
+      summary: Find Acronym
+      parameters:
+      - name: from
+        in: path
+        description: User Id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [POST] users
+  /acronym:
+    post:
+      tags:
+      - acronyms
+      summary: Add Acronym
+      parameters:
+      - name: body
+        in: body
+        description: acronym Data
+        required: true
+        schema:
+          $ref: '#/definitions/users'
+      responses:
+        201:
+          description: 'Created'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+
+# [PUT] users/id
+  /acronym/:acronym:
+    put:
+      tags:
+      - acronyms
+      summary: Update User By Id
+      parameters:
+      - name: id
+        in: path
+        description: user Id
+        required: true
+        type: integer
+      - name: body
+        in: body
+        description: user Data
+        required: true
+        schema:
+          $ref: '#/definitions/users'
+      responses:
+        200:
+          description: 'OK'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [DELETE] users/id
+
+    delete:
+      tags:
+      - acronyms
+      summary: Delete Acronym By acronym
+      parameters:
+      - name: id
+        in: path
+        description: user Id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# definitions
+definitions:
+  users:
+    type: object
+    required:
+        - acronym
+        - definition
+    properties:
+      acronym:
+        type: string
+        description: acronym
+      definition:
+        type: string
+        description: definition
+
+schemes:
+ - https
+ - http

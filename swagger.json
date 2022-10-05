@@ -1,0 +1,236 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Acronym API",
+    "description": "REST API for the World Texting Foundation, also known as WTF",
+    "contact": {
+      "name": "OK"
+    }
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/acronym": {
+      "get": {
+        "description": "Returns a list of acronyms, paginated using query parameters",
+        "operationId": "findAcronyms",
+        "produces": [
+          "application/json",
+          "application/xml",
+          "text/xml",
+          "text/html"
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "description": "start position to return",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "maximum number of results to return",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "acronyms to filter by",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Create"
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Receives an acronym and definition strings. Adds the acronym definition to the db",
+        "operationId": "addAcronyms",
+        "produces": [
+          "application/json",
+          "application/xml",
+          "text/xml",
+          "text/html"
+        ],
+        "parameters": [
+          {
+            "name": "acronym",
+            "in": "body",
+            "description": "Acronym and Definition to add to the db",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Create"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ErrorModel"
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ErrorModel"
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/acronym/{acronym}": {
+      "put": {
+        "description": "Receives an acronym and definition strings, uses an authorization header to ensure acronyms are protected, updates the acronym definition to the db for :acronym",
+        "operationId": "updateAcronym",
+        "produces": [
+          "application/json",
+          "application/xml",
+          "text/xml",
+          "text/html"
+        ],
+        "parameters": [
+          {
+            "name": "acronym",
+            "in": "path",
+            "description": "Acronym to update",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          },
+          {
+            "name": "definition",
+            "in": "path",
+            "description": "Definitino of acronym to update",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Create"
+            }
+          },
+          "404": {
+            "description": "Token Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes :acronym, uses an authorization header to ensure acronyms are protected",
+        "operationId": "deleteAcronym",
+        "produces": [
+          "application/json",
+          "application/xml",
+          "text/xml",
+          "text/html"
+        ],
+        "parameters": [
+          {
+            "name": "acronym",
+            "in": "path",
+            "description": "Acronym to delete",
+            "required": true,
+            "type": "string",
+            "format": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "default": {
+            "description": "unexpected error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Create": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "acronym": {
+          "type": "string"
+        },
+        "definition": {
+          "type": "string"
+        }
+      }
+    },
+    "ErrorModel": {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
